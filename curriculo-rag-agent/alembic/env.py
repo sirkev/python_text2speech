@@ -5,6 +5,7 @@ from sqlmodel import SQLModel
 from app.core.config import settings
 from app.models.knowledge import KnowledgeChunk
 from app.models.care import Company, Branch, Employee, Client, CarePlan
+from app.models.chat import ChatSession, ChatMessage
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

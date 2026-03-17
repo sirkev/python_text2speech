@@ -2,8 +2,11 @@ import google.generativeai as genai
 from app.core.config import settings
 from app.db.repositories.knowledge_repo import KnowledgeRepository
 from app.models.knowledge import KnowledgeChunk
+from app.core.logging import get_logger
 from typing import List
 import re
+
+logger = get_logger(__name__)
 
 class RAGService:
     def __init__(self, repository: KnowledgeRepository):
@@ -25,7 +28,7 @@ class RAGService:
                 if not chunk_text.strip():
                     continue
                     
-                print(f"Generating embedding for chunk of {len(chunk_text)} chars...")
+                logger.debug("generating_embedding", chars=len(chunk_text), source=source)
                 embedding = genai.embed_content(
                     model=settings.EMBEDDING_MODEL,
                     content=chunk_text,
@@ -41,20 +44,16 @@ class RAGService:
                 )
             
             # Step 3: Save to DAO
-            print(f"Saving {len(knowledge_chunks)} chunks to DB...")
+            logger.info("saving_chunks", count=len(knowledge_chunks), source=source)
             self.repo.add_chunks(knowledge_chunks)
             return len(knowledge_chunks)
         except Exception as e:
-            print(f"CRITICAL ERROR in ingest_text: {str(e)}")
-            import traceback
-            traceback.print_exc()
+            logger.error("ingest_text_failed", error=str(e), source=source, exc_info=True)
             raise e
 
     def _get_chunks(self, text: str, max_chars: int = 1000) -> List[str]:
         """
         Helper to split text into manageable chunks.
-        Note: True semantic chunking would use embeddings to find breakpoints.
-        This is a 'Level 2' split (recursive/sentence based) for now.
         """
         # Simple split by sentences/newlines for beginner version
         return [t.strip() for t in re.split(r'\n\n|\.\s', text) if t.strip()]
@@ -63,6 +62,7 @@ class RAGService:
         """
         Retrieves the most relevant chunks for a query.
         """
+        logger.info("retrieve_context_start", query=query)
         query_embedding = genai.embed_content(
             model=settings.EMBEDDING_MODEL,
             content=query,
@@ -72,4 +72,6 @@ class RAGService:
         relevant_chunks = self.repo.search_similar(query_embedding, limit=limit)
         
         context = "\n---\n".join([c.content for c in relevant_chunks])
+        logger.info("retrieve_context_done", chunks_found=len(relevant_chunks))
         return context
+
