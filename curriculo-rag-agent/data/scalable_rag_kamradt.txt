@@ -1,0 +1,12 @@
+Summary of How to Build a Scalable RAG System for AI Apps by Greg Kamradt (share.google/v13rAVpQVo7aI5eq2):
+Greg Kamradt focuses on the 'Librarian' aspect of RAG, specifically how to retrieve high-quality context.
+Key Techniques:
+1. 5 Levels of Text Splitting:
+   - Level 1: Character Splitting (simple but low context).
+   - Level 2: Recursive Character Splitting (better, respects structural boundaries).
+   - Level 3: Document-Specific Splitting (specialized for HTML/Markdown).
+   - Level 4: Semantic Splitting (using embeddings to find natural breakpoints).
+   - Level 5: Agentic Splitting (using an AI to summarize and chunk).
+2. Semantic Chunking: Breaking text where the 'meaning' changes, rather than at a fixed character count.
+3. Scalability: Using tools like Databricks and vector databases to handle millions of documents efficiently.
+The video emphasizes that the retrieval step is the most critical for RAG performance.

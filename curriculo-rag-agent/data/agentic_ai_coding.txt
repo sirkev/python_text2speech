@@ -1,0 +1,8 @@
+Summary of Guide to Agentic AI – Build a Python Coding Agent with Gemini by freeCodeCamp (YtHdaXuOAks):
+This video focuses on building an autonomous coding agent using Gemini Flash.
+Key Concepts:
+1. Agentic Loop: A Reason-Act (ReAct) pattern where the AI iterates through steps to solve a problem.
+2. Tool Calling: Allowing the AI to call external functions like 'get_file_content', 'write_file', or 'run_python_file'.
+3. System Prompting: Carefully instructing the AI on its role and rules.
+The tutorial demonstrates an agent that can find a bug in a multi-file project, write a fix, and run tests to verify it, all autonomously.
+It emphasizes using lightweight models like Gemini Flash for fast, iterative loops.

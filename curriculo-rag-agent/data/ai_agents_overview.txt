@@ -1,0 +1,9 @@
+Summary of How to Build AI Agents Using Python by Simplilearn (WQLzDDNEBGY):
+This tutorial explores the broader scope of AI Agents beyond just coding.
+Topics covered:
+1. Decision Making: How agents perceive environments and take actions.
+2. Memory: Long-term and short-term memory implementation for agents.
+3. Prompt Chaining: Connecting multiple LLM calls for complex tasks.
+4. API Integration: Giving agents tools to interact with the real world (weather, stocks, etc.).
+The capstone project is an AI Interview Coach that evaluates responses and remembers past candidate interactions to provide a final report.
+It highlights the shift from simple chatbots to proactive, goal-oriented agents.

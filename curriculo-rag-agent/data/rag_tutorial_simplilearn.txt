@@ -1,0 +1,9 @@
+Summary of Python RAG Tutorial 2026 by Simplilearn (WQTaM7tBlvc):
+This tutorial covers building AI apps using Retrieval-Augmented Generation (RAG). 
+Key components include:
+1. Document Ingestion: Chunking large documents and converting them into vector embeddings.
+2. Vector Storage: Storing embeddings in a vector database (e.g., ChromaDB, Postgres with pgvector).
+3. Retrieval: Finding similarities between a user query and stored chunks.
+4. Generation: Passing retrieved context to an LLM like Gemini to produce a grounded response.
+The goal is to reduce hallucinations and provide the LLM with up-to-date or private information.
+Real-world applications include customer support bots and medical assistant systems.
