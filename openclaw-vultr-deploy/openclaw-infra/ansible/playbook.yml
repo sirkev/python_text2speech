@@ -1,0 +1,84 @@
+---
+- name: Setup OpenClaw on Vultr
+  hosts: openclaw
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Allow port 3000 for OpenClaw
+      ufw:
+        rule: allow
+        port: '3000'
+        proto: tcp
+
+    - name: Allow port 18789 for OpenClaw Gateway
+      ufw:
+        rule: allow
+        port: '18789'
+        proto: tcp
+
+    - name: Install dependencies
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: present
+
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+
+    - name: Install Docker
+      apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        state: present
+
+    - name: Ensure Docker is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Create OpenClaw directory
+      file:
+        path: /opt/openclaw
+        state: directory
+        mode: '0755'
+
+    - name: Deploy OpenClaw (via Docker Compose)
+      copy:
+        dest: /opt/openclaw/docker-compose.yml
+        content: |
+          services:
+            gateway:
+              image: ghcr.io/openclaw/openclaw:latest
+              container_name: openclaw-gateway
+              ports:
+                - "3000:18789"
+              environment:
+                - OPENCLAW_GATEWAY_TOKEN=supersecrettoken123
+                - NODE_OPTIONS=--max-old-space-size=1024
+              command: ["node", "openclaw.mjs", "gateway", "run", "--allow-unconfigured", "--bind", "0.0.0.0", "--port", "18789"]
+              restart: always
+            # You can add more services (redis, etc.) if needed by OpenClaw
+      
+    - name: Start OpenClaw
+      command: docker compose up -d
+      args:
+        chdir: /opt/openclaw
